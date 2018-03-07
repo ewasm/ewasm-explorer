@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>ewasm Explorer</title>
+    <style>
+      .accountDiv {
+        /* margin-top: 1em; */
+      }
+
+      .accountHeaderDiv {
+        display: flex;
+        flex-direction: row;
+      }
+
+      .storageDiv {
+        font-size: 0.5em;
+        font-family: "Lucida Console", Monaco, monospace;
+      }
+      .storageDiv .accountAddress {
+        font-size: 2em;
+      }
+      .accountDiv .accountCode {
+        font-family: "Lucida Console", Monaco, monospace;
+        white-space: pre;
+        /* word-wrap: break-word;*/
+        /* font-size: 0.3rem; */
+        /* transform: scale(0.5); */
+        /* font-size: 6px; */
+        font-size: 0.5em;
+        margin-left: 2em;
+        width: 80%;
+        color: gray;
+      }
+
+      .storageDiv .storageExpandButton {
+        font-size: 1.2em;
+      }
+
+      .storageExpandButton.active i {
+        transform: rotate(180deg);
+      }
+
+      .collapsible-header.active i {
+        /* -ms-transform: rotate(180deg); /* IE 9 */
+        /* -webkit-transform: rotate(180deg); /* Chrome, Safari, Opera */
+        transform: rotate(180deg);
+      }
+      
+      .reddit-app {
+        opacity: 0.2;
+      }
+    </style>
+
+    <!-- Import Google Icon Font -->
+    <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <!-- Import materialize.css -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/css/materialize.min.css" rel="stylesheet">
+
+  </head>
+  <body>
+    <!-- Import jQuery before materialize.js -->
+    <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/0.98.0/js/materialize.min.js"></script>
+
+    <div id="root"></div>
+    <!--
+      This HTML file is a template.
+      If you open it directly in the browser, you will see an empty page.
+
+      You can add webfonts, meta tags, or analytics to this file.
+      The build step will place the bundled scripts into the <body> tag.
+
+      To begin the development, run `npm start` in this folder.
+      To create a production bundle, use `npm run build`.
+    -->
+  </body>
+</html>
