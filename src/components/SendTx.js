@@ -95,13 +95,13 @@ class SendTx extends Component {
           <Row>
             <Input s={9} label="Privkey" validate
               ref={node => { this.txPrivkey = node }}
-              defaultValue='0x45a915e4d060149eb4365960e6a7a45f334393093061116b197e3240065ff2d8' />
+              defaultValue='0x22841708f94778e47ffec5bdd6bff68a1becc473a1026d49fc0c03a7cbe9d330' />
           </Row>
 
           <Row>
             <Input s={7} label="To:" validate
               ref={node => { this.txToAddress = node }}
-              defaultValue='0x1000000000000000000000000000000000000000' />
+              defaultValue='0x3f04aef42126a9a82053069ed8c73671300e40a5' />
 
             <Input s={2} label="Value (ETH):" validate
               ref={node => { this.txValue = node }}

@@ -121,8 +121,8 @@ export const onNewBlock = block => (dispatch, getState) => {
     console.log('onNewBlock getting code and storage for address:', address)
     dispatch(getAccountBalance(address))
     dispatch(getTransactionCount(address))
-    dispatch(getAccountCode(address))
-    dispatch(getAccountStorage(address, block.hash))
+    // dispatch(getAccountCode(address))
+    // dispatch(getAccountStorage(address, block.hash))
   }
 }
 
@@ -140,10 +140,10 @@ export const getLatestBlock = () => (dispatch, getState) => {
       const state = getState()
       if (state.latestBlock) {
         console.log('last block number:', state.latestBlock.blockNumber)
-        if (state.latestBlock.blockNumber !== block.number.toNumber()) {
+        // if (state.latestBlock.blockNumber !== block.number.toNumber()) {
           dispatch(onNewBlock(block))
           //getStorage(block.hash)
-        }
+        // }
       }
 
       dispatch(receiveLatestBlock(block))
@@ -193,11 +193,11 @@ export const getAccountStorage = (accountAddress, blockHash) => (dispatch, getSt
     console.log('storageRangeAt result:', result);
     //let storageSlots = Object.keys(result.storage);
     //let sortedSlots = sortStorage(storageSlots, result.storage);
-    if (result.storage) {
-      dispatch(receiveStorage(accountAddress, result.storage))
-    } else {
-      console.log('ERROR! result.storage undefined')
-    }
+    // if (result.storage) {
+    //   dispatch(receiveStorage(accountAddress, result.storage))
+    // } else {
+    //   console.log('ERROR! result.storage undefined')
+    // }
     // null '0x5483de922'
   });
 }
