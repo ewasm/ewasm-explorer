@@ -73,14 +73,11 @@ class App extends Component {
       accountsWatchList = []
     }
 
-
     let { statusIsConnected } = this.props
     if (statusIsConnected === undefined) {
       statusIsConnected = false;
     }
     console.log('statusIsConnected:', statusIsConnected)
-
-
     console.log('latestBlock:', latestBlock)
 
     return (
