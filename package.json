@@ -21,7 +21,7 @@
     "redux": "^3.5.2",
     "redux-thunk": "^2.1.0",
     "wabt": "^1.0.0",
-    "wast2wasm": "git+https://github.com/ewasm/wast2wasm.git#update-wabt"
+    "wast2wasm": "git+https://github.com/ewasm/wast2wasm.git"
   },
   "scripts": {
     "start": "react-scripts start",
