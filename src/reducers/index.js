@@ -34,7 +34,7 @@ const accountsWatchList = (state = { accountsWatchList: [] }, action) => {
       //console.log('reducers accountsWatchList action:', action)
       return {
         ...state,
-        accountsWatchList: action.accountAddresses
+        watchlist: action.accountAddresses
       }
     default: 
       return state
