@@ -7,7 +7,7 @@ import {
   RECEIVE_CODE,
   RECEIVE_BALANCE,
   RECEIVE_TX_COUNT,
-  RPC_ERROR,
+  // RPC_ERROR,
 } from '../actions'
 
 
@@ -106,7 +106,7 @@ const balanceByAccount = (state = { }, action) => {
 }
 
 
-const txCountByAccount = (state = { }, action) => {
+const txCountByAccount = (state = {}, action) => {
   switch (action.type) {
     case RECEIVE_TX_COUNT:
       console.log('txCountByAccount RECEIVE_TX_COUNT:', action)
@@ -118,9 +118,6 @@ const txCountByAccount = (state = { }, action) => {
       return state
   }
 }
-
-
-
 
 
 const rootReducer = combineReducers({

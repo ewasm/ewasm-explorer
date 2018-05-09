@@ -21,17 +21,13 @@ class App extends Component {
     balanceByAccount: PropTypes.object,
     codeByAccount: PropTypes.object,
     storageByAccount: PropTypes.object,
-
     statusIsConnected: PropTypes.bool,
     accountsWatchList: PropTypes.array,
-
-    dispatch: PropTypes.func.isRequired
   }
 
   componentDidMount() {
     this.props.connectToRpc()
     this.props.addAccountsToWatchList()
-    const { dispatch } = this.props
   }
 
   render() {

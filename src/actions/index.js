@@ -2,7 +2,6 @@ import { ethQuery } from '../eth-rpc.js'
 import {
   DEFAULT_RPC_URL,
   ACCOUNTS_TO_WATCH,
-  FROM_ADDRESS,
 } from '../constants'
 
 /*** eth actions ***/

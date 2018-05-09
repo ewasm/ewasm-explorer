@@ -15,7 +15,6 @@ class SendTx extends Component {
   txToAddress: null;
   txValue: null;
   txPrivkey: null;
-  txNonce: null;
   //state = { storageExpanded: false };
 
   static propTypes = {
@@ -64,13 +63,8 @@ class SendTx extends Component {
 
   render() {
     console.log('SendTx component render props:', this.props)
-    const { defaultFromAddress, txCountByAccount} = this.props
-
+    const { defaultFromAddress, txCountByAccount } = this.props
     console.log('txCountByAccount:', txCountByAccount)
-    if (txCountByAccount[defaultFromAddress] !== undefined) {
-      this.txNonce = txCountByAccount[defaultFromAddress]
-    }
-
 
     return (
 
