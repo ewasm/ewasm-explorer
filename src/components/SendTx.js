@@ -1,4 +1,3 @@
-//import React from 'react'
 import React, { Component } from 'react'
 import PropTypes from 'prop-types'
 
@@ -11,13 +10,11 @@ import ethunit from 'ethjs-unit'
 import EthereumTx from 'ethereumjs-tx'
 
 
-
 class SendTx extends Component {
   txDataInput: null;
   txToAddress: null;
   txValue: null;
   txPrivkey: null;
-  txNonce: null;
   //state = { storageExpanded: false };
 
   static propTypes = {
@@ -28,16 +25,6 @@ class SendTx extends Component {
     //txCount: PropTypes.object,
     //storage: PropTypes.object,
     //code: PropTypes.string
-  }
-
-  /*
-  constructor(props) {
-    super(props);
-  }
-  */
-
-  componentDidMount() {
-    //const { selectedSubreddit } = this.props
   }
 
   handleSendTxDataChange = e => {
@@ -58,7 +45,7 @@ class SendTx extends Component {
       to: this.txToAddress.input.value, 
       value: '0x' + txValue,
       data: this.txDataInput.input.value,
-      chainId: 66 // ewasm testnet chainId
+      chainId: 66, // ewasm testnet chainId
     }
     console.log('txParams:', txParams)
 
@@ -67,60 +54,48 @@ class SendTx extends Component {
     const serializedTx = tx.serialize()
     console.log('serializedTx:', serializedTx.toString('hex'))
 
-    this.props.dispatch(sendRawTx(serializedTx.toString('hex')))
+    // could connect() this component using react-redux and map this
+    // action to a prop using mapDispatchToProps but keep it simple for now
+    sendRawTx(serializedTx.toString('hex'))
     // TODO: add toast notifier for "tx hash"
   }
 
 
-
   render() {
     console.log('SendTx component render props:', this.props)
-    const { defaultFromAddress, txCountByAccount} = this.props
-
+    const { defaultFromAddress, txCountByAccount } = this.props
     console.log('txCountByAccount:', txCountByAccount)
-    if (txCountByAccount[defaultFromAddress] !== undefined) {
-      this.txNonce = txCountByAccount[defaultFromAddress]
-    }
-
 
     return (
 
       <CardPanel className="blue-grey lighten-5 black-text">
-        <form onSubmit={e => {
-            e.preventDefault()
-            console.log('send tx onSubmit')
-            this.handleSendTxSubmit()
-        }}>
+        <Row>
+          <Input s={9} label="Privkey" validate
+            ref={node => { this.txPrivkey = node }}
+            defaultValue='0x22841708f94778e47ffec5bdd6bff68a1becc473a1026d49fc0c03a7cbe9d330' />
+        </Row>
 
-          <Row>
-            <Input s={9} label="Privkey" validate
-              ref={node => { this.txPrivkey = node }}
-              defaultValue='0x45a915e4d060149eb4365960e6a7a45f334393093061116b197e3240065ff2d8' />
-          </Row>
+        <Row>
+          <Input s={7} label="To:" validate
+            ref={node => { this.txToAddress = node }}
+            defaultValue='0x3f04aef42126a9a82053069ed8c73671300e40a5' />
 
-          <Row>
-            <Input s={7} label="To:" validate
-              ref={node => { this.txToAddress = node }}
-              defaultValue='0x1000000000000000000000000000000000000000' />
+          <Input s={2} label="Value (ETH):" validate
+            ref={node => { this.txValue = node }}
+            defaultValue='0' />
+        </Row>
 
-            <Input s={2} label="Value (ETH):" validate
-              ref={node => { this.txValue = node }}
-              defaultValue='0' />
-          </Row>
+        <Row>
+          <Input s={12} type='textarea' label="Data (bytes or wast):"
+            defaultValue='0x...'
+            ref={node => { this.txDataInput = node }}
+            onChange={this.handleSendTxDataChange}
+          />
+        </Row>
 
-          <Row>
-            <Input s={12} type='textarea' label="Data (bytes or wast):"
-              defaultValue='0x...'
-              ref={node => { this.txDataInput = node }}
-              onChange={this.handleSendTxDataChange}
-            />
-          </Row>
-
-          <div className="right-align">
-            <Button waves='light' className='red' type="submit">Send tx<Icon right>send</Icon></Button>
-          </div>
-
-        </form>
+        <div className="right-align">
+          <Button waves='light' className='red' onClick={this.handleSendTxSubmit}>Send tx<Icon right>send</Icon></Button>
+        </div>
       </CardPanel>
     )
 

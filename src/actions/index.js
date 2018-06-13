@@ -1,57 +1,8 @@
-//import { eth, rpc } from '../eth-rpc.js'
 import { ethQuery } from '../eth-rpc.js'
-
-export const REQUEST_POSTS = 'REQUEST_POSTS'
-export const RECEIVE_POSTS = 'RECEIVE_POSTS'
-export const SELECT_SUBREDDIT = 'SELECT_SUBREDDIT'
-export const INVALIDATE_SUBREDDIT = 'INVALIDATE_SUBREDDIT'
-
-export const selectSubreddit = subreddit => ({
-  type: SELECT_SUBREDDIT,
-  subreddit
-})
-
-export const invalidateSubreddit = subreddit => ({
-  type: INVALIDATE_SUBREDDIT,
-  subreddit
-})
-
-export const requestPosts = subreddit => ({
-  type: REQUEST_POSTS,
-  subreddit
-})
-
-export const receivePosts = (subreddit, json) => ({
-  type: RECEIVE_POSTS,
-  subreddit,
-  posts: json.data.children.map(child => child.data),
-  receivedAt: Date.now()
-})
-
-const fetchPosts = subreddit => dispatch => {
-  dispatch(requestPosts(subreddit))
-  return fetch(`https://www.reddit.com/r/${subreddit}.json`)
-    .then(response => response.json())
-    .then(json => dispatch(receivePosts(subreddit, json)))
-}
-
-const shouldFetchPosts = (state, subreddit) => {
-  const posts = state.postsBySubreddit[subreddit]
-  if (!posts) {
-    return true
-  }
-  if (posts.isFetching) {
-    return false
-  }
-  return posts.didInvalidate
-}
-
-export const fetchPostsIfNeeded = subreddit => (dispatch, getState) => {
-  if (shouldFetchPosts(getState(), subreddit)) {
-    return dispatch(fetchPosts(subreddit))
-  }
-}
-
+import {
+  DEFAULT_RPC_URL,
+  ACCOUNTS_TO_WATCH,
+} from '../constants'
 
 /*** eth actions ***/
 
@@ -63,6 +14,10 @@ export const RECEIVE_CODE = 'RECEIVE_CODE'
 export const RECEIVE_BALANCE = 'RECEIVE_BALANCE'
 export const RECEIVE_TX_COUNT = 'RECEIVE_TX_COUNT'
 export const SET_ACCOUNTS_LIST = 'SET_ACCOUNTS_LIST'
+
+/*
+ * action creators
+ */
 
 export const receiveLatestBlock = block => ({
   type: LATEST_BLOCK,
@@ -105,6 +60,9 @@ export const setWatchList = (accountAddresses) => ({
 })
 
 
+/*
+ * bound action creators
+ */
 
 export const onNewBlock = block => (dispatch, getState) => {
   console.log('onNewBlock:', block)
@@ -121,8 +79,8 @@ export const onNewBlock = block => (dispatch, getState) => {
     console.log('onNewBlock getting code and storage for address:', address)
     dispatch(getAccountBalance(address))
     dispatch(getTransactionCount(address))
-    dispatch(getAccountCode(address))
-    dispatch(getAccountStorage(address, block.hash))
+    // dispatch(getAccountCode(address))
+    // dispatch(getAccountStorage(address, block.hash))
   }
 }
 
@@ -140,10 +98,10 @@ export const getLatestBlock = () => (dispatch, getState) => {
       const state = getState()
       if (state.latestBlock) {
         console.log('last block number:', state.latestBlock.blockNumber)
-        if (state.latestBlock.blockNumber !== block.number.toNumber()) {
+        // if (state.latestBlock.blockNumber !== block.number.toNumber()) {
           dispatch(onNewBlock(block))
           //getStorage(block.hash)
-        }
+        // }
       }
 
       dispatch(receiveLatestBlock(block))
@@ -158,28 +116,27 @@ export const getLatestBlock = () => (dispatch, getState) => {
 }
 
 
-
 export const connectToRpc = rpcUrl => (dispatch, getState) => {
+  if (rpcUrl === undefined) rpcUrl = DEFAULT_RPC_URL
   console.log('connectToRpc action called. rpcUrl:', rpcUrl)
   ethQuery.connect(rpcUrl)
-  dispatch(getLatestBlock())
+  return dispatch(getLatestBlock())
 }
 
 
-export const addAccountsToWatchList = accountsList => (dispatch, getState) => {
-  console.log('addAccountsToWatchList action called. accountsList:', accountsList)
-  let currentAccountList = getState().accountsWatchList.accountsWatchList
+export const addAccountsToWatchList = () => (dispatch, getState) => {
+  console.log('addAccountsToWatchList action called')
+  let currentAccountList = ACCOUNTS_TO_WATCH
   if (currentAccountList === undefined) {
     currentAccountList = []
   }
   console.log('currentAccountList:', currentAccountList)
-  const listWithDups = currentAccountList.concat(accountsList)
-  const uniqueList = [...new Set(listWithDups)]
-  //ethQuery.connect(rpcUrl)
-  dispatch(setWatchList(uniqueList))
+  //const listWithDups = currentAccountList.concat(accountsList)
+  //const uniqueList = [...new Set(listWithDups)]
+  ////ethQuery.connect(rpcUrl)
+  //return dispatch(setWatchList(uniqueList))
+  return dispatch(setWatchList(currentAccountList))
 }
-
-
 
 
 export const getAccountStorage = (accountAddress, blockHash) => (dispatch, getState) => {
@@ -193,11 +150,11 @@ export const getAccountStorage = (accountAddress, blockHash) => (dispatch, getSt
     console.log('storageRangeAt result:', result);
     //let storageSlots = Object.keys(result.storage);
     //let sortedSlots = sortStorage(storageSlots, result.storage);
-    if (result.storage) {
-      dispatch(receiveStorage(accountAddress, result.storage))
-    } else {
-      console.log('ERROR! result.storage undefined')
-    }
+    // if (result.storage) {
+    //   dispatch(receiveStorage(accountAddress, result.storage))
+    // } else {
+    //   console.log('ERROR! result.storage undefined')
+    // }
     // null '0x5483de922'
   });
 }
@@ -249,13 +206,16 @@ export const getTransactionCount = accountAddress => (dispatch, getState) => {
 export const sendRawTx = rawTx => (dispatch, getState) => {
   console.log('sendRawTx action called.')
   
-  ethQuery.eth.sendRawTransaction(rawTx)
+  return ethQuery.eth.sendRawTransaction(rawTx)
   .then((result) => {
     console.log('got sendRawTransaction result:', result)
-    //dispatch(receiveBalance(accountAddress, result))
+    // This is not critical *for an account already on the watch list*
+    // since its balance would be updated the next time we receive account
+    // info but we need this for *new accounts* which aren't on the watch
+    // list.
+    //return dispatch(receiveBalance(accountAddress, result))
   }).catch((err) => {
     console.log('sendRawTransaction rpc error:', err)
-    dispatch(rpcError())
+    return dispatch(rpcError())
   })
-
 }

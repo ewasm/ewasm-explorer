@@ -101,7 +101,8 @@ class Account extends Component {
 
   render() {
     console.log('Account component render props:', this.props)
-    const { address, storage } = this.props
+    const { address } = this.props
+    let { storage } = this.props
     let { balance } = this.props
     let { txCount } = this.props
     let { code } = this.props
@@ -121,7 +122,8 @@ class Account extends Component {
     console.log('Account.js rendering account:', address)
     console.log('account storage:', storage)
     if (storage === undefined) {
-      return (<div><span>{address}</span></div>)
+      storage = {}
+      // return (<div><span>{address}</span></div>)
     }
 
     if (code === undefined) {

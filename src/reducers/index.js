@@ -1,9 +1,4 @@
 import { combineReducers } from 'redux'
-import {
-  SELECT_SUBREDDIT, INVALIDATE_SUBREDDIT,
-  REQUEST_POSTS, RECEIVE_POSTS
-} from '../actions'
-
 
 import {
   LATEST_BLOCK,
@@ -12,70 +7,8 @@ import {
   RECEIVE_CODE,
   RECEIVE_BALANCE,
   RECEIVE_TX_COUNT,
-  RPC_ERROR,
+  // RPC_ERROR,
 } from '../actions'
-
-// https://redux.js.org/docs/recipes/StructuringReducers.html
-
-
-const selectedSubreddit = (state = 'reactjs', action) => {
-  switch (action.type) {
-    case SELECT_SUBREDDIT:
-      return action.subreddit
-    default:
-      return state
-  }
-}
-
-const posts = (state = {
-  isFetching: false,
-  didInvalidate: false,
-  items: []
-}, action) => {
-  switch (action.type) {
-    case INVALIDATE_SUBREDDIT:
-      return {
-        ...state,
-        didInvalidate: true
-      }
-    case REQUEST_POSTS:
-      return {
-        ...state,
-        isFetching: true,
-        didInvalidate: false
-      }
-    case RECEIVE_POSTS:
-      return {
-        ...state,
-        isFetching: false,
-        didInvalidate: false,
-        items: action.posts,
-        lastUpdated: action.receivedAt
-      }
-    default:
-      return state
-  }
-}
-
-const postsBySubreddit = (state = { }, action) => {
-  switch (action.type) {
-    case INVALIDATE_SUBREDDIT:
-    case RECEIVE_POSTS:
-    case REQUEST_POSTS:
-      return {
-        ...state,
-        [action.subreddit]: posts(state[action.subreddit], action)
-      }
-    default:
-      return state
-  }
-}
-
-
-
-/******     ******/
-
-
 
 
 const latestBlock = (state = { }, action) => {
@@ -101,7 +34,7 @@ const accountsWatchList = (state = { accountsWatchList: [] }, action) => {
       //console.log('reducers accountsWatchList action:', action)
       return {
         ...state,
-        accountsWatchList: action.accountAddresses
+        watchlist: action.accountAddresses
       }
     default: 
       return state
@@ -173,7 +106,7 @@ const balanceByAccount = (state = { }, action) => {
 }
 
 
-const txCountByAccount = (state = { }, action) => {
+const txCountByAccount = (state = {}, action) => {
   switch (action.type) {
     case RECEIVE_TX_COUNT:
       console.log('txCountByAccount RECEIVE_TX_COUNT:', action)
@@ -187,9 +120,6 @@ const txCountByAccount = (state = { }, action) => {
 }
 
 
-
-
-
 const rootReducer = combineReducers({
   //...statusIsConnected,
   latestBlock,
@@ -198,10 +128,6 @@ const rootReducer = combineReducers({
   balanceByAccount,
   txCountByAccount,
   accountsWatchList,
-
-  /*** ****/
-  postsBySubreddit,
-  selectedSubreddit
 })
 
 export default rootReducer

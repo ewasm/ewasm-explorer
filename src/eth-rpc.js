@@ -1,4 +1,3 @@
-
 const HttpProvider = require('ethjs-provider-http');
 const EthRPC = require('ethjs-rpc');
 const Eth = require('ethjs-query');
